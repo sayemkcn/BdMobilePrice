@@ -1,11 +1,13 @@
 package me.technogenius.mobilepricebd.helper;
 
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.ProgressBar;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -19,6 +21,7 @@ import java.util.List;
 import me.technogenius.mobilepricebd.R;
 import me.technogenius.mobilepricebd.adapters.RecyclerAdapter;
 import me.technogenius.mobilepricebd.beans.Post;
+import me.technogenius.mobilepricebd.commons.Commons;
 import me.technogenius.mobilepricebd.commons.HttpProvider;
 
 /**
@@ -30,18 +33,43 @@ public class MainFragmentHelper {
     private final Activity context;
     private final int pageNumber;
     private final RecyclerView recyclerView;
+    private ProgressBar progressBar;
+    private Button seeMoreButton;
+
+    List<Post> postList = new ArrayList<>();
+
+    private int pageCount = 1;
+
+    private ProgressDialog progressDialog;
 
     public MainFragmentHelper(Activity context, View rootView, int pageNumber) {
         this.context = context;
         this.pageNumber = pageNumber;
         this.recyclerView = (RecyclerView) rootView.findViewById(R.id.recyclerView);
+        this.progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+        this.seeMoreButton = (Button) rootView.findViewById(R.id.moreButton);
+        this.progressDialog = Commons.getProgressDialog(context);
     }
 
     public void exec() {
+        this.loadData(this.buildUrl());
+        this.seeMoreButton.setOnClickListener(v -> onButtonClick(v));
+    }
 
-        String url = "http://www.mobiledokan.com/samsung/";
+    private void onButtonClick(View v) {
+        this.progressDialog.show();
+        this.pageCount++;
+        this.loadData(this.buildUrl());
+        Log.i("URL", this.buildUrl());
+    }
+
+    private String buildUrl() {
+        String baseUrl = context.getResources().getString(R.string.baseUrl);
+        return baseUrl + "samsung/page/" + this.pageCount;
+    }
+
+    private void loadData(String url) {
         new Thread(() -> this.fetchData(url)).start();
-
     }
 
     private void fetchData(String url) {
@@ -49,12 +77,15 @@ public class MainFragmentHelper {
             String response = new HttpProvider(this.context).fetchData(url);
             context.runOnUiThread(() -> onResponse(response));
         } catch (IOException e) {
+            if (this.progressDialog.isShowing())
+                this.progressDialog.cancel();
             Log.e("IOException", e.toString());
         }
     }
 
     private void onResponse(String response) {
-        List<Post> postList = new ArrayList<>();
+        if (this.progressDialog.isShowing())
+            this.progressDialog.cancel();
 
         Document doc = Jsoup.parseBodyFragment(response);
         Elements elements = doc.getElementsByClass("post-template");
@@ -71,14 +102,22 @@ public class MainFragmentHelper {
             post.setDetailsUrl(detailsLink.attr("href"));
             post.setPrice(element.getElementsByTag("p").get(0).text());
 
-            postList.add(post);
+            this.postList.add(post);
         }
 
-        this.setupRecyclerView(postList);
+        // set recyclerview with data
+        this.setupRecyclerView(this.postList);
+        // hide progressbar
+        if (this.progressBar.getVisibility() == View.VISIBLE) {
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
     private void setupRecyclerView(List<Post> postList) {
-        this.recyclerView.setAdapter(new RecyclerAdapter(this.context,postList));
+        this.seeMoreButton.setVisibility(View.VISIBLE);
+        this.recyclerView.setVisibility(View.VISIBLE);
+        this.recyclerView.setAdapter(new RecyclerAdapter(this.context, postList));
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this.context));
+        this.recyclerView.setNestedScrollingEnabled(false);
     }
 }

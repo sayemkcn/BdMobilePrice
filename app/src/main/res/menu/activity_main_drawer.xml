@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+        <item
+            android:id="@+id/nav_home"
+            android:icon="@mipmap/ic_launcher"
+            android:title="Home" />
+        <item
+            android:id="@+id/nav_bookmark"
+            android:icon="@mipmap/ic_launcher"
+            android:title="My Bookmarks" />
+        <item
+            android:id="@+id/nav_offline_news"
+            android:icon="@mipmap/ic_launcher"
+            android:title="Offline News" />
+
+        <item
+            android:id="@+id/nav_share"
+            android:icon="@mipmap/ic_launcher"
+            android:title="Share" />
+
+    </group>
+
+
+</menu>
