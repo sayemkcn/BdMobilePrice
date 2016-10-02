@@ -5,4 +5,7 @@
         http://www.mobiledokan.com/
     </string>
 
+    <string name="app_url">
+        https://play.google.com/store/apps/details?id=net.toracode.mobilepricebd
+    </string>
 </resources>

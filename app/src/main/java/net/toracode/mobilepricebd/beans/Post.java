@@ -1,4 +1,4 @@
-package me.technogenius.mobilepricebd.beans;
+package net.toracode.mobilepricebd.beans;
 
 /**
  * Created by sayemkcn on 10/2/16.

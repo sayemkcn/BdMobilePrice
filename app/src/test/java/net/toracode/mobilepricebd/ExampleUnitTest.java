@@ -1,4 +1,4 @@
-package me.technogenius.mobilepricebd;
+package net.toracode.mobilepricebd;
 
 import org.junit.Test;
 

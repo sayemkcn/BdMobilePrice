@@ -5,7 +5,7 @@ android {
     buildToolsVersion "24.0.2"
 
     defaultConfig {
-        applicationId "me.technogenius.mobilepricebd"
+        applicationId "net.toracode.mobilepricebd"
         minSdkVersion 15
         targetSdkVersion 21
         versionCode 1

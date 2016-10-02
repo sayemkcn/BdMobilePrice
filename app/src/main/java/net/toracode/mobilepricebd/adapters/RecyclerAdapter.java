@@ -1,4 +1,4 @@
-package me.technogenius.mobilepricebd.adapters;
+package net.toracode.mobilepricebd.adapters;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -14,9 +14,9 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import java.util.List;
 
-import me.technogenius.mobilepricebd.DetailsActivity;
-import me.technogenius.mobilepricebd.R;
-import me.technogenius.mobilepricebd.beans.Post;
+import net.toracode.mobilepricebd.DetailsActivity;
+import net.toracode.mobilepricebd.R;
+import net.toracode.mobilepricebd.beans.Post;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyViewHolder> {
     private LayoutInflater inflater;

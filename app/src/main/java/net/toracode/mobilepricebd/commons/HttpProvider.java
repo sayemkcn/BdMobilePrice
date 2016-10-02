@@ -1,4 +1,4 @@
-package me.technogenius.mobilepricebd.commons;
+package net.toracode.mobilepricebd.commons;
 
 import android.app.Activity;
 

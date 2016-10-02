@@ -1,4 +1,4 @@
-package me.technogenius.mobilepricebd;
+package net.toracode.mobilepricebd;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +17,7 @@ import org.jsoup.nodes.Element;
 
 import java.io.IOException;
 
-import me.technogenius.mobilepricebd.commons.HttpProvider;
+import net.toracode.mobilepricebd.commons.HttpProvider;
 
 public class DetailsActivity extends AppCompatActivity {
     private WebView webView;

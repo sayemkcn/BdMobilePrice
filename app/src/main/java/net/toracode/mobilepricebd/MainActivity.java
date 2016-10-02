@@ -1,4 +1,4 @@
-package me.technogenius.mobilepricebd;
+package net.toracode.mobilepricebd;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,7 +19,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import me.technogenius.mobilepricebd.helper.MainFragmentHelper;
+import net.toracode.mobilepricebd.commons.Commons;
+import net.toracode.mobilepricebd.helper.MainFragmentHelper;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -92,7 +93,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_share) {
+            Commons.shareText(this, "Check the latest smartphone prices in Bangladesh ", getResources().getString(R.string.app_url));
             return true;
         }
 
@@ -111,7 +113,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else if (id == R.id.nav_tablets) {
             this.startActivity(new Intent(this, CategoryActivity.class).putExtra("brandName", "tablets"));
         } else if (id == R.id.nav_laptops) {
-            this.startActivity(new Intent(this,CategoryActivity.class).putExtra("brandName","laptops"));
+            this.startActivity(new Intent(this, CategoryActivity.class).putExtra("brandName", "laptops"));
         }
 
         // close drawer

@@ -1,4 +1,4 @@
-package me.technogenius.mobilepricebd.helper;
+package net.toracode.mobilepricebd.helper;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -18,11 +18,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.technogenius.mobilepricebd.R;
-import me.technogenius.mobilepricebd.adapters.RecyclerAdapter;
-import me.technogenius.mobilepricebd.beans.Post;
-import me.technogenius.mobilepricebd.commons.Commons;
-import me.technogenius.mobilepricebd.commons.HttpProvider;
+import net.toracode.mobilepricebd.R;
+import net.toracode.mobilepricebd.adapters.RecyclerAdapter;
+import net.toracode.mobilepricebd.beans.Post;
+import net.toracode.mobilepricebd.commons.Commons;
+import net.toracode.mobilepricebd.commons.HttpProvider;
 
 /**
  * Created by sayemkcn on 10/2/16.
@@ -52,20 +52,22 @@ public class MainFragmentHelper {
     }
 
     public void exec() {
-        this.loadData(this.buildUrl(this.pageNumber-1));
+        this.loadData(this.buildUrl(this.pageNumber - 1));
         this.seeMoreButton.setOnClickListener(v -> onButtonClick(v));
     }
 
     private void onButtonClick(View v) {
         this.progressDialog.show();
         this.pageCount++;
-        this.loadData(this.buildUrl(this.pageNumber-1));
-        Log.i("URL", this.buildUrl(this.pageNumber-1));
+        this.loadData(this.buildUrl(this.pageNumber - 1));
+        Log.i("URL", this.buildUrl(this.pageNumber - 1));
     }
 
     private String buildUrl(int pageNumber) {
         String baseUrl = context.getResources().getString(R.string.baseUrl);
         String[] brandNames = context.getResources().getStringArray(R.array.brand_names);
+        if (this.pageCount == 1)
+            return baseUrl + brandNames[pageNumber].toLowerCase();
         return baseUrl + brandNames[pageNumber].toLowerCase() + "/page/" + this.pageCount;
     }
 

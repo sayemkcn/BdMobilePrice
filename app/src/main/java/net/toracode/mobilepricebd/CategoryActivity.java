@@ -1,4 +1,4 @@
-package me.technogenius.mobilepricebd;
+package net.toracode.mobilepricebd;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
@@ -20,10 +21,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import me.technogenius.mobilepricebd.adapters.RecyclerAdapter;
-import me.technogenius.mobilepricebd.beans.Post;
-import me.technogenius.mobilepricebd.commons.Commons;
-import me.technogenius.mobilepricebd.commons.HttpProvider;
+import net.toracode.mobilepricebd.adapters.RecyclerAdapter;
+import net.toracode.mobilepricebd.beans.Post;
+import net.toracode.mobilepricebd.commons.Commons;
+import net.toracode.mobilepricebd.commons.HttpProvider;
 
 public class CategoryActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -53,18 +54,20 @@ public class CategoryActivity extends AppCompatActivity {
 
         if (brandName != null)
             this.loadData(this.buildUrl(brandName, this.pageCount));
-        this.seeMoreButton.setOnClickListener(v->this.onButtonClick(v,brandName));
+        this.seeMoreButton.setOnClickListener(v -> this.onButtonClick(v, brandName));
     }
 
-    private void onButtonClick(View v,String brandName) {
+    private void onButtonClick(View v, String brandName) {
         this.progressDialog.show();
         this.pageCount++;
-        this.loadData(this.buildUrl(brandName,this.pageCount));
-        Log.i("URL", this.buildUrl(brandName,this.pageCount));
+        this.loadData(this.buildUrl(brandName, this.pageCount));
+        Log.i("URL", this.buildUrl(brandName, this.pageCount));
     }
 
     private String buildUrl(String brandName, int pageCount) {
         String baseUrl = this.getResources().getString(R.string.baseUrl);
+        if (this.pageCount == 1)
+            return baseUrl + brandName;
         return baseUrl + brandName + "/page/" + pageCount;
     }
 
@@ -121,4 +124,11 @@ public class CategoryActivity extends AppCompatActivity {
         this.recyclerView.setNestedScrollingEnabled(false);
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home)
+            this.finish();
+        return super.onOptionsItemSelected(item);
+    }
 }
