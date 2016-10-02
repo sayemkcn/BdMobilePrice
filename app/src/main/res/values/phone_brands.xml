@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+    <string-array name="brand_names">
+        <item>Latest-Smartphones</item>
+        <item>Samsung</item>
+        <item>Symphony</item>
+        <item>Walton</item>
+        <item>Huawei</item>
+        <item>HTC</item>
+        <item>Sony</item>
+        <item>Nokia</item>
+        <item>Microsoft</item>
+        <item>iPhone</item>
+        <item>Oppo</item>
+        <item>LG</item>
+        <item>Lava</item>
+        <item>ASUS</item>
+        <item>Micromax</item>
+        <item>Alcatel</item>
+        <item>Xiaomi</item>
+        <item>Motorola</item>
+        <item>BlackBerry</item>
+        <item>Intex</item>
+        <item>Maximus</item>
+        <item>Gionee</item>
+        <item>Lenovo</item>
+        <item>OnePlus</item>
+        <item>Meizu</item>
+        <item>Elite</item>
+        <item>Okapia</item>
+        <item>MyCell</item>
+        <item>Goldberg</item>
+        <item>Ok-Mobile</item>
+        <item>Maxis</item>
+    </string-array>
+    
+</resources>

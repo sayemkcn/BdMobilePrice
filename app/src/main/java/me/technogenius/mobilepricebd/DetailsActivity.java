@@ -5,8 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import org.jsoup.Jsoup;
@@ -20,6 +22,7 @@ import me.technogenius.mobilepricebd.commons.HttpProvider;
 public class DetailsActivity extends AppCompatActivity {
     private WebView webView;
     private TextView titleView;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +30,9 @@ public class DetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_details);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        // init progressbar
+        this.progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
 
         if (getSupportActionBar() != null) {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -54,6 +60,10 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     private void onResponse(String response) {
+        if (this.progressBar.getVisibility() == View.VISIBLE) {
+            progressBar.setVisibility(View.GONE);
+            this.webView.setVisibility(View.VISIBLE);
+        }
         String[] parsedHtmlArray = this.parseHtml(response);
         this.titleView.setText(parsedHtmlArray[0]);
         this.webView.loadDataWithBaseURL("", parsedHtmlArray[1], "text/html", "utf-8", " ");

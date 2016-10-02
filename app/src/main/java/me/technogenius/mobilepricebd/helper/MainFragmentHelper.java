@@ -52,20 +52,21 @@ public class MainFragmentHelper {
     }
 
     public void exec() {
-        this.loadData(this.buildUrl());
+        this.loadData(this.buildUrl(this.pageNumber-1));
         this.seeMoreButton.setOnClickListener(v -> onButtonClick(v));
     }
 
     private void onButtonClick(View v) {
         this.progressDialog.show();
         this.pageCount++;
-        this.loadData(this.buildUrl());
-        Log.i("URL", this.buildUrl());
+        this.loadData(this.buildUrl(this.pageNumber-1));
+        Log.i("URL", this.buildUrl(this.pageNumber-1));
     }
 
-    private String buildUrl() {
+    private String buildUrl(int pageNumber) {
         String baseUrl = context.getResources().getString(R.string.baseUrl);
-        return baseUrl + "samsung/page/" + this.pageCount;
+        String[] brandNames = context.getResources().getStringArray(R.array.brand_names);
+        return baseUrl + brandNames[pageNumber].toLowerCase() + "/page/" + this.pageCount;
     }
 
     private void loadData(String url) {

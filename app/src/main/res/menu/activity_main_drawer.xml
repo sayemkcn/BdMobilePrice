@@ -4,22 +4,26 @@
     <group android:checkableBehavior="single">
 
         <item
-            android:id="@+id/nav_home"
+            android:id="@+id/nav_latest"
             android:icon="@mipmap/ic_launcher"
-            android:title="Home" />
+            android:title="Latest Smartphones" />
         <item
-            android:id="@+id/nav_bookmark"
+            android:id="@+id/nav_android"
             android:icon="@mipmap/ic_launcher"
-            android:title="My Bookmarks" />
+            android:title="Android Phones" />
         <item
-            android:id="@+id/nav_offline_news"
+            android:id="@+id/nav_feature_phones"
             android:icon="@mipmap/ic_launcher"
-            android:title="Offline News" />
+            android:title="Feature Phones" />
 
         <item
-            android:id="@+id/nav_share"
+            android:id="@+id/nav_tablets"
             android:icon="@mipmap/ic_launcher"
-            android:title="Share" />
+            android:title="Tablets" />
+        <item
+            android:id="@+id/nav_laptops"
+            android:icon="@mipmap/ic_launcher"
+            android:title="Laptops" />
 
     </group>
 
