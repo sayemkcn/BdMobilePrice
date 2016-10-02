@@ -1,5 +1,6 @@
 package me.technogenius.mobilepricebd;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -17,7 +18,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import me.technogenius.mobilepricebd.helper.MainFragmentHelper;
 
@@ -102,7 +102,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
-        Toast.makeText(this, id + " clicked!", Toast.LENGTH_SHORT).show();
+        if (id == R.id.nav_latest) {
+            this.startActivity(new Intent(this, CategoryActivity.class).putExtra("brandName", "latest-smartphones"));
+        } else if (id == R.id.nav_android) {
+            this.startActivity(new Intent(this, CategoryActivity.class).putExtra("brandName", "android"));
+        } else if (id == R.id.nav_feature_phones) {
+            this.startActivity(new Intent(this, CategoryActivity.class).putExtra("brandName", "feature-phones"));
+        } else if (id == R.id.nav_tablets) {
+            this.startActivity(new Intent(this, CategoryActivity.class).putExtra("brandName", "tablets"));
+        } else if (id == R.id.nav_laptops) {
+            this.startActivity(new Intent(this,CategoryActivity.class).putExtra("brandName","laptops"));
+        }
+
+        // close drawer
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return false;
