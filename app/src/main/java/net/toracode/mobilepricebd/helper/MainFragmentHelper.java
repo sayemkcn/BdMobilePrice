@@ -3,12 +3,15 @@ package net.toracode.mobilepricebd.helper;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import net.toracode.mobilepricebd.DetailsActivity;
 import net.toracode.mobilepricebd.R;
@@ -45,6 +48,8 @@ public class MainFragmentHelper {
 
     private ProgressDialog progressDialog;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     public MainFragmentHelper(Activity context, View rootView, int pageNumber) {
         this.context = context;
         this.pageNumber = pageNumber;
@@ -52,6 +57,7 @@ public class MainFragmentHelper {
         this.progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         this.seeMoreButton = (Button) rootView.findViewById(R.id.moreButton);
         this.progressDialog = Commons.getProgressDialog(context);
+        this.mFirebaseAnalytics = FirebaseAnalytics.getInstance(context);
     }
 
     public void exec() {
@@ -131,6 +137,11 @@ public class MainFragmentHelper {
                             .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             .putExtra("detailsUrl", this.postList.get(position).getDetailsUrl())
             );
+            // log event
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, this.postList.get(position).getTitle());
+            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Device Name");
+            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
         });
     }
 }
