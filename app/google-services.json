@@ -1,0 +1,104 @@
+{
+  "project_info": {
+    "project_number": "335006572307",
+    "firebase_url": "https://little-apps-1083a.firebaseio.com",
+    "project_id": "little-apps-1083a",
+    "storage_bucket": "little-apps-1083a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:335006572307:android:b752d8129e480d7f",
+        "android_client_info": {
+          "package_name": "net.toracode.sayem.dmeapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "335006572307-jo3vau71vu0cf855uo2r2k2j4vrjt1t1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDag7cwZMfpb7MIndd189nGmncgzDTGqow"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:335006572307:android:834b6dfb4cf31382",
+        "android_client_info": {
+          "package_name": "digital.edgelabs.bdbnnewsedgelabs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "335006572307-jo3vau71vu0cf855uo2r2k2j4vrjt1t1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDag7cwZMfpb7MIndd189nGmncgzDTGqow"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:335006572307:android:1fb66749d1f9807f",
+        "android_client_info": {
+          "package_name": "net.toracode.mobilepricebd"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "335006572307-jo3vau71vu0cf855uo2r2k2j4vrjt1t1.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDag7cwZMfpb7MIndd189nGmncgzDTGqow"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

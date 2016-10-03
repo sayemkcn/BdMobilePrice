@@ -13,11 +13,14 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import net.toracode.mobilepricebd.commons.Commons;
 import net.toracode.mobilepricebd.helper.MainFragmentHelper;
@@ -43,6 +46,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private String[] brands;
 
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        this.mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         // init brands array
         this.brands = getResources().getStringArray(R.array.brand_names);
@@ -75,6 +82,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mViewPager.setAdapter(mSectionsPagerAdapter);
         this.tabLayout.setupWithViewPager(mViewPager);
 
+        mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                Bundle bundle = new Bundle();
+                bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, brands[position]);
+                bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Brand Name");
+                mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
 
@@ -104,18 +130,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         int id = item.getItemId();
+
+        Bundle bundle = new Bundle();
+
         if (id == R.id.nav_latest) {
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "latest-smartphones");
             this.startActivity(new Intent(this, CategoryActivity.class).putExtra("brandName", "latest-smartphones"));
         } else if (id == R.id.nav_android) {
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "android");
             this.startActivity(new Intent(this, CategoryActivity.class).putExtra("brandName", "android"));
         } else if (id == R.id.nav_feature_phones) {
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "feature-phone");
             this.startActivity(new Intent(this, CategoryActivity.class).putExtra("brandName", "feature-phones"));
         } else if (id == R.id.nav_tablets) {
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "tablets");
             this.startActivity(new Intent(this, CategoryActivity.class).putExtra("brandName", "tablets"));
         } else if (id == R.id.nav_laptops) {
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, "laptops");
             this.startActivity(new Intent(this, CategoryActivity.class).putExtra("brandName", "laptops"));
         }
 
+        bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Category/OS");
+        mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
         // close drawer
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
