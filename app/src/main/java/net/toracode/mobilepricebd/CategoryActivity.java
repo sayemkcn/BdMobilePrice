@@ -1,6 +1,7 @@
 package net.toracode.mobilepricebd;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +26,7 @@ import net.toracode.mobilepricebd.adapters.RecyclerAdapter;
 import net.toracode.mobilepricebd.beans.Post;
 import net.toracode.mobilepricebd.commons.Commons;
 import net.toracode.mobilepricebd.commons.HttpProvider;
+import net.toracode.mobilepricebd.commons.ItemClickSupport;
 
 public class CategoryActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -122,6 +124,13 @@ public class CategoryActivity extends AppCompatActivity {
         this.recyclerView.setAdapter(new RecyclerAdapter(this, postList));
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         this.recyclerView.setNestedScrollingEnabled(false);
+        ItemClickSupport.addTo(this.recyclerView).setOnItemClickListener((recyclerView, position, view) -> {
+            this.startActivity(
+                    new Intent(this, DetailsActivity.class)
+                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            .putExtra("detailsUrl", this.postList.get(position).getDetailsUrl())
+            );
+        });
     }
 
     @Override
