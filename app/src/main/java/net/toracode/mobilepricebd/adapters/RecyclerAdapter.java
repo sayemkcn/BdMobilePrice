@@ -68,16 +68,16 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.MyView
 //            sourceNameTextView.setTypeface(typeface);
 //            newsTimeTextView.setTypeface(typeface);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    context.startActivity(
-                            new Intent(context, DetailsActivity.class)
-                                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                    .putExtra("detailsUrl", postList.get(getAdapterPosition()).getDetailsUrl())
-                    );
-                }
-            });
+//            itemView.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    context.startActivity(
+//                            new Intent(context, DetailsActivity.class)
+//                                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//                                    .putExtra("detailsUrl", postList.get(getAdapterPosition()).getDetailsUrl())
+//                    );
+//                }
+//            });
 
         }
     }
