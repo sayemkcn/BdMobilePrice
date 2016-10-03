@@ -10,8 +10,16 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
+
+import net.toracode.mobilepricebd.adapters.RecyclerAdapter;
+import net.toracode.mobilepricebd.beans.Post;
+import net.toracode.mobilepricebd.commons.Ads;
+import net.toracode.mobilepricebd.commons.Commons;
+import net.toracode.mobilepricebd.commons.HttpProvider;
+import net.toracode.mobilepricebd.commons.ItemClickSupport;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -22,12 +30,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.toracode.mobilepricebd.adapters.RecyclerAdapter;
-import net.toracode.mobilepricebd.beans.Post;
-import net.toracode.mobilepricebd.commons.Commons;
-import net.toracode.mobilepricebd.commons.HttpProvider;
-import net.toracode.mobilepricebd.commons.ItemClickSupport;
-
 public class CategoryActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
@@ -37,6 +39,7 @@ public class CategoryActivity extends AppCompatActivity {
     private int pageCount = 1;
 
     private List<Post> postList = new ArrayList<>();
+    private Ads ads;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,12 +54,23 @@ public class CategoryActivity extends AppCompatActivity {
         this.progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
         this.seeMoreButton = (Button) this.findViewById(R.id.moreButton);
         this.progressDialog = Commons.getProgressDialog(this);
-
-        String brandName = getIntent().getStringExtra("brandName");
+        // ads
+        this.ads = new Ads(this);
+        final ViewGroup viewGroup = (ViewGroup) ((ViewGroup) this
+                .findViewById(android.R.id.content)).getChildAt(0);
+        this.ads.loadBannerAd(viewGroup,R.id.catAdView);
+        this.ads.loadInterstitial();
+        // end ads
+        final String brandName = getIntent().getStringExtra("brandName");
 
         if (brandName != null)
             this.loadData(this.buildUrl(brandName, this.pageCount));
-        this.seeMoreButton.setOnClickListener(v -> this.onButtonClick(v, brandName));
+        this.seeMoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onButtonClick(v, brandName);
+            }
+        });
     }
 
     private void onButtonClick(View v, String brandName) {
@@ -73,14 +87,24 @@ public class CategoryActivity extends AppCompatActivity {
         return baseUrl + brandName + "/page/" + pageCount;
     }
 
-    private void loadData(String url) {
-        new Thread(() -> this.fetchData(url)).start();
+    private void loadData(final String url) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                fetchData(url);
+            }
+        }).start();
     }
 
     private void fetchData(String url) {
         try {
-            String response = new HttpProvider(this).fetchData(url);
-            runOnUiThread(() -> onResponse(response));
+            final String response = new HttpProvider(this).fetchData(url);
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onResponse(response);
+                }
+            });
         } catch (IOException e) {
             if (this.progressDialog.isShowing())
                 this.progressDialog.cancel();
@@ -118,18 +142,23 @@ public class CategoryActivity extends AppCompatActivity {
         }
     }
 
-    private void setupRecyclerView(List<Post> postList) {
+    private void setupRecyclerView(final List<Post> postList) {
         this.seeMoreButton.setVisibility(View.VISIBLE);
         this.recyclerView.setVisibility(View.VISIBLE);
         this.recyclerView.setAdapter(new RecyclerAdapter(this, postList));
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         this.recyclerView.setNestedScrollingEnabled(false);
-        ItemClickSupport.addTo(this.recyclerView).setOnItemClickListener((recyclerView, position, view) -> {
-            this.startActivity(
-                    new Intent(this, DetailsActivity.class)
-                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            .putExtra("detailsUrl", this.postList.get(position).getDetailsUrl())
-            );
+
+        ItemClickSupport.addTo(this.recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                ads.displayInterstitial();
+                startActivity(
+                        new Intent(CategoryActivity.this, DetailsActivity.class)
+                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                .putExtra("detailsUrl", postList.get(position).getDetailsUrl())
+                );
+            }
         });
     }
 

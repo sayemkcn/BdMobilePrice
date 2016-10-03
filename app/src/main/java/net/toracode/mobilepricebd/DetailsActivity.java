@@ -48,12 +48,21 @@ public class DetailsActivity extends AppCompatActivity {
             webSetting.setLoadWithOverviewMode(true);
         }
 
-        new Thread(() -> {
-            try {
-                String response = new HttpProvider(DetailsActivity.this).fetchData(getIntent().getStringExtra("detailsUrl"));
-                runOnUiThread(() -> onResponse(response));
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                final String response = new HttpProvider(DetailsActivity.this).fetchData(getIntent().getStringExtra("detailsUrl"));
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            onResponse(response);
+                        }
+                    });
             } catch (IOException e) {
                 Log.e("IOException", e.getMessage());
+            }
             }
         }).start();
 
@@ -66,7 +75,7 @@ public class DetailsActivity extends AppCompatActivity {
         }
         String[] parsedHtmlArray = this.parseHtml(response);
         this.titleView.setText(parsedHtmlArray[0]);
-        this.webView.loadDataWithBaseURL("", parsedHtmlArray[1], "text/html", "utf-8", " ");
+        this.webView.loadDataWithBaseURL("", parsedHtmlArray[1].replace("MobileDokan","").replace("Store",""), "text/html", "utf-8", " ");
     }
 
     private String[] parseHtml(String response) {
