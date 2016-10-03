@@ -2,12 +2,21 @@ package net.toracode.mobilepricebd.helper;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+
+import net.toracode.mobilepricebd.DetailsActivity;
+import net.toracode.mobilepricebd.R;
+import net.toracode.mobilepricebd.adapters.RecyclerAdapter;
+import net.toracode.mobilepricebd.beans.Post;
+import net.toracode.mobilepricebd.commons.Commons;
+import net.toracode.mobilepricebd.commons.HttpProvider;
+import net.toracode.mobilepricebd.commons.ItemClickSupport;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,12 +26,6 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import net.toracode.mobilepricebd.R;
-import net.toracode.mobilepricebd.adapters.RecyclerAdapter;
-import net.toracode.mobilepricebd.beans.Post;
-import net.toracode.mobilepricebd.commons.Commons;
-import net.toracode.mobilepricebd.commons.HttpProvider;
 
 /**
  * Created by sayemkcn on 10/2/16.
@@ -122,5 +125,12 @@ public class MainFragmentHelper {
         this.recyclerView.setAdapter(new RecyclerAdapter(this.context, postList));
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this.context));
         this.recyclerView.setNestedScrollingEnabled(false);
+        ItemClickSupport.addTo(this.recyclerView).setOnItemClickListener((recyclerView, position, view) -> {
+            context.startActivity(
+                    new Intent(context, DetailsActivity.class)
+                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            .putExtra("detailsUrl", this.postList.get(position).getDetailsUrl())
+            );
+        });
     }
 }
