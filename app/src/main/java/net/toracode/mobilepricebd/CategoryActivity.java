@@ -1,6 +1,7 @@
 package net.toracode.mobilepricebd;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,6 +12,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+
+import com.google.firebase.analytics.FirebaseAnalytics;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -25,6 +28,7 @@ import net.toracode.mobilepricebd.adapters.RecyclerAdapter;
 import net.toracode.mobilepricebd.beans.Post;
 import net.toracode.mobilepricebd.commons.Commons;
 import net.toracode.mobilepricebd.commons.HttpProvider;
+import net.toracode.mobilepricebd.commons.ItemClickSupport;
 
 public class CategoryActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
@@ -35,6 +39,8 @@ public class CategoryActivity extends AppCompatActivity {
     private int pageCount = 1;
 
     private List<Post> postList = new ArrayList<>();
+
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +55,7 @@ public class CategoryActivity extends AppCompatActivity {
         this.progressBar = (ProgressBar) this.findViewById(R.id.progressBar);
         this.seeMoreButton = (Button) this.findViewById(R.id.moreButton);
         this.progressDialog = Commons.getProgressDialog(this);
+        this.mFirebaseAnalytics = FirebaseAnalytics.getInstance(this);
 
         String brandName = getIntent().getStringExtra("brandName");
 
@@ -122,6 +129,18 @@ public class CategoryActivity extends AppCompatActivity {
         this.recyclerView.setAdapter(new RecyclerAdapter(this, postList));
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this));
         this.recyclerView.setNestedScrollingEnabled(false);
+        ItemClickSupport.addTo(this.recyclerView).setOnItemClickListener((recyclerView, position, view) -> {
+            this.startActivity(
+                    new Intent(this, DetailsActivity.class)
+                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            .putExtra("detailsUrl", this.postList.get(position).getDetailsUrl())
+            );
+            // log event
+            Bundle bundle = new Bundle();
+            bundle.putString(FirebaseAnalytics.Param.ITEM_NAME, this.postList.get(position).getTitle());
+            bundle.putString(FirebaseAnalytics.Param.CONTENT_TYPE, "Device Name");
+            mFirebaseAnalytics.logEvent(FirebaseAnalytics.Event.SELECT_CONTENT, bundle);
+        });
     }
 
     @Override
