@@ -2,12 +2,26 @@ package net.toracode.mobilepricebd.helper;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
+
+import net.toracode.mobilepricebd.DetailsActivity;
+import net.toracode.mobilepricebd.R;
+import net.toracode.mobilepricebd.adapters.RecyclerAdapter;
+import net.toracode.mobilepricebd.beans.Post;
+import net.toracode.mobilepricebd.commons.Ads;
+import net.toracode.mobilepricebd.commons.Commons;
+import net.toracode.mobilepricebd.commons.HttpProvider;
+import net.toracode.mobilepricebd.commons.ItemClickSupport;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -17,12 +31,6 @@ import org.jsoup.select.Elements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import net.toracode.mobilepricebd.R;
-import net.toracode.mobilepricebd.adapters.RecyclerAdapter;
-import net.toracode.mobilepricebd.beans.Post;
-import net.toracode.mobilepricebd.commons.Commons;
-import net.toracode.mobilepricebd.commons.HttpProvider;
 
 /**
  * Created by sayemkcn on 10/2/16.
@@ -41,6 +49,8 @@ public class MainFragmentHelper {
     private int pageCount = 1;
 
     private ProgressDialog progressDialog;
+    private Ads ads;
+
 
     public MainFragmentHelper(Activity context, View rootView, int pageNumber) {
         this.context = context;
@@ -49,11 +59,22 @@ public class MainFragmentHelper {
         this.progressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
         this.seeMoreButton = (Button) rootView.findViewById(R.id.moreButton);
         this.progressDialog = Commons.getProgressDialog(context);
+        this.ads = new Ads(context);
+        ads.loadBannerAd(rootView,R.id.homeAdView);
+        ads.loadInterstitial();
     }
+
+
 
     public void exec() {
         this.loadData(this.buildUrl(this.pageNumber - 1));
-        this.seeMoreButton.setOnClickListener(v -> onButtonClick(v));
+//        this.seeMoreButton.setOnClickListener(v -> onButtonClick(v));
+        this.seeMoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onButtonClick(v);
+            }
+        });
     }
 
     private void onButtonClick(View v) {
@@ -71,14 +92,26 @@ public class MainFragmentHelper {
         return baseUrl + brandNames[pageNumber].toLowerCase() + "/page/" + this.pageCount;
     }
 
-    private void loadData(String url) {
-        new Thread(() -> this.fetchData(url)).start();
+    private void loadData(final String url) {
+//        new Thread(() -> this.fetchData(url)).start();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                fetchData(url);
+            }
+        }).start();
     }
 
     private void fetchData(String url) {
         try {
-            String response = new HttpProvider(this.context).fetchData(url);
-            context.runOnUiThread(() -> onResponse(response));
+            final String response = new HttpProvider(this.context).fetchData(url);
+//            context.runOnUiThread(() -> onResponse(response));
+            context.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    onResponse(response);
+                }
+            });
         } catch (IOException e) {
             if (this.progressDialog.isShowing())
                 this.progressDialog.cancel();
@@ -116,11 +149,23 @@ public class MainFragmentHelper {
         }
     }
 
-    private void setupRecyclerView(List<Post> postList) {
+    private void setupRecyclerView(final List<Post> postList) {
         this.seeMoreButton.setVisibility(View.VISIBLE);
         this.recyclerView.setVisibility(View.VISIBLE);
         this.recyclerView.setAdapter(new RecyclerAdapter(this.context, postList));
         this.recyclerView.setLayoutManager(new LinearLayoutManager(this.context));
         this.recyclerView.setNestedScrollingEnabled(false);
+
+        ItemClickSupport.addTo(this.recyclerView).setOnItemClickListener(new ItemClickSupport.OnItemClickListener() {
+            @Override
+            public void onItemClicked(RecyclerView recyclerView, int position, View v) {
+                ads.displayInterstitial();
+                context.startActivity(
+                        new Intent(context, DetailsActivity.class)
+                                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                .putExtra("detailsUrl", postList.get(position).getDetailsUrl())
+                );
+            }
+        });
     }
 }
